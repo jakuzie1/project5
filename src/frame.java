@@ -31,9 +31,11 @@ class frame extends JFrame implements ItemListener {
 	static JPanel firstPanel;
 	static JPanel secondPanel;
 	static JPanel fourthPanel;
+	static JPanel linePanel;
 	static ChartPanel piePanel;
 	static JFreeChart barChart;
 	static JFreeChart pieChart;
+	static JFreeChart lineChart;
 	
 	public static void barChart() throws FileNotFoundException, IOException {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -76,6 +78,15 @@ class frame extends JFrame implements ItemListener {
 	
 	public static void lineChart() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		lineChart = ChartFactory.createLineChart(
+				"Transaction Cost of Blocks", // chart title
+				"Block Number", // domain axis label
+				"Transaction Count (ETH)", // range axis label
+				dataset, // data
+				PlotOrientation.VERTICAL, // orientation
+				false, // include legend
+				true, // tooltips
+				false); // urls
 	}
 	
 	public static JFrame frameInitial() {
@@ -197,6 +208,12 @@ class frame extends JFrame implements ItemListener {
 		piePanel.setBounds(300, 100, 1000,600);
 		piePanel.setVisible(false);
 		
+		//create panel w/line chart
+		lineChart();
+		linePanel = new ChartPanel(lineChart);
+		linePanel.setBounds(200,150,1000,600);
+		linePanel.setVisible(false);
+		
 		//create fourth panel w/check boxes
 		fourthPanel = new JPanel();
 		fourthPanel.setLayout(new GridBagLayout());
@@ -211,6 +228,7 @@ class frame extends JFrame implements ItemListener {
 		mainFrame.add(secondPanel);
 		mainFrame.add(piePanel);
 		mainFrame.add(fourthPanel);
+		mainFrame.add(linePanel);
 		
 		
 		// set the size of frame
@@ -231,6 +249,7 @@ class frame extends JFrame implements ItemListener {
 			switch (msg) {
 				case "--select chart--": 
 					piePanel.setVisible(false);
+					linePanel.setVisible(false);
 					secondPanel.setVisible(false);
 					fourthPanel.setVisible(false);
 					mainFrame.repaint();
@@ -238,12 +257,14 @@ class frame extends JFrame implements ItemListener {
 					break;
 				case "Unique Miners": 
 					piePanel.setVisible(true);
+					linePanel.setVisible(false);
 					secondPanel.setVisible(true);
 					fourthPanel.setVisible(false);
 					mainFrame.repaint();
 					mainFrame.revalidate();
 					break;
 				case "Transaction Cost": 
+					linePanel.setVisible(true);
 					piePanel.setVisible(false);
 					secondPanel.setVisible(false);
 					fourthPanel.setVisible(true);
@@ -252,6 +273,7 @@ class frame extends JFrame implements ItemListener {
 					break;
 				case "Time Difference":
 					piePanel.setVisible(false);
+					linePanel.setVisible(false);
 					secondPanel.setVisible(false);
 					fourthPanel.setVisible(false);
 					mainFrame.repaint();
